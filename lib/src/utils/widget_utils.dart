@@ -41,7 +41,11 @@ extension WidgetClassChecks on ClassElement {
       'Container',
       'Row',
       'Column',
-      // Add more common widget classes as needed
+      'ListView',
+      'GridView',
+      'Stack',
+      'ConsumerWidget',
+      'ConsumerStatefulWidget',
     ];
 
     if (widgetBaseClasses.contains(name)) {
