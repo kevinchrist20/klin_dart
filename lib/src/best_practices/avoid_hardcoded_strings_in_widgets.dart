@@ -26,14 +26,12 @@ class AvoidHardcodedStringsInWidgetsRule extends DartLintRule {
     CustomLintContext context,
   ) {
     context.registry.addStringLiteral((node) {
-      // Skip empty strings
       final value = node.stringValue;
       if (value == null || value.trim().isEmpty) return;
 
       // Skip imports and other directives
       if (node.thisOrAncestorOfType<Directive>() != null) return;
 
-      // Check if the string is in a widget context
       if (node.isInWidgetContext()) {
         reporter.atNode(node, code);
       }
