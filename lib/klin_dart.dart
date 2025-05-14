@@ -8,7 +8,7 @@ class _KlinLinter extends PluginBase {
   @override
   List<LintRule> getLintRules(CustomLintConfigs configs) {
     return [
-      // AvoidHardcodedStringsInWidgetsRule(),
+      AvoidHardcodedStringsInWidgetsRule(),
       AvoidStringLiteralsInLogicRule()
     ];
   }
