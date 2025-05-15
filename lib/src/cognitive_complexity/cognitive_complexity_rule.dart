@@ -1,0 +1,50 @@
+import 'package:analyzer/error/listener.dart';
+import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:analyzer/error/error.dart' as error;
+import 'package:klin_dart/src/cognitive_complexity/cognitive_complexity_visitor.dart';
+
+class CognitiveComplexityRule extends DartLintRule {
+  static const _lintName = 'cognitive_complexity';
+
+  CognitiveComplexityRule()
+      : super(
+          code: LintCode(
+            name: _lintName,
+            problemMessage: "",
+          ),
+        );
+
+  @override
+  void run(
+    CustomLintResolver resolver,
+    ErrorReporter reporter,
+    CustomLintContext context,
+  ) {
+    context.registry.addCompilationUnit((node) {
+      final visitor = MethodVisitor();
+      node.visitChildren(visitor);
+
+      final methodMetrics = visitor.analyzeCollectedMethods();
+
+      for (final entry in methodMetrics.entries) {
+        final metrics = entry.value;
+        final complexity = metrics.cognitiveComplexity;
+
+        if (complexity > 5) {
+          print('Method: ${metrics.name} - Complexity: $complexity');
+          reporter.reportErrorForToken(
+            LintCode(
+              name: _lintName,
+              problemMessage: metrics.refactoringSuggestions.join(),
+              uniqueName: '${_lintName}_${metrics.name}',
+              errorSeverity: complexity > 10
+                  ? error.ErrorSeverity.ERROR
+                  : error.ErrorSeverity.WARNING,
+            ),
+            metrics.token,
+          );
+        }
+      }
+    });
+  }
+}
