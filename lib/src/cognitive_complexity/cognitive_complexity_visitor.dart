@@ -1,7 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:klin_dart/src/cognitive_complexity/config.dart';
-import 'package:klin_dart/src/cognitive_complexity/refactoring_suggestion_generator.dart';
 
 /// AST visitor that collects method declarations and calculates complexity.
 class MethodVisitor extends RecursiveAstVisitor<void> {
@@ -15,12 +14,10 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
-    final methodNode = node.thisOrAncestorOfType<MethodDeclaration>();
-
     final metrics = MethodComplexityMetrics(
       node.name.toString(),
       'method',
-      methodNode?.beginToken ?? node.name,
+      node.name,
     );
     metrics.numberOfParameters = node.parameters?.parameters.length ?? 0;
 
@@ -34,11 +31,10 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    final functionNode = node.thisOrAncestorOfType<FunctionDeclaration>();
     final metrics = MethodComplexityMetrics(
       node.name.toString(),
       'function',
-      functionNode?.beginToken ?? node.name,
+      node.name,
     );
 
     // Get parameters from the function's expression
@@ -212,7 +208,6 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
   Map<String, MethodComplexityMetrics> analyzeCollectedMethods() {
     for (var entry in methodMetrics.entries) {
       _categorizeComplexity(entry.value);
-      RefactoringSuggestionGenerator.generateSuggestions(entry.value);
     }
 
     return methodMetrics;

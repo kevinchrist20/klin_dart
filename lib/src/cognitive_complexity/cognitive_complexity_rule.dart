@@ -32,16 +32,16 @@ class CognitiveComplexityRule extends DartLintRule {
 
         if (complexity > 5) {
           print('Method: ${metrics.name} - Complexity: $complexity');
-          reporter.reportErrorForToken(
+          reporter.atToken(
+            metrics.token,
             LintCode(
               name: _lintName,
-              problemMessage: metrics.refactoringSuggestions.join(),
+              problemMessage: metrics.riskAssessment,
               uniqueName: '${_lintName}_${metrics.name}',
               errorSeverity: complexity > 10
                   ? error.ErrorSeverity.ERROR
                   : error.ErrorSeverity.WARNING,
             ),
-            metrics.token,
           );
         }
       }

@@ -9,7 +9,6 @@ class MethodComplexityMetrics {
   int lineCount = 0;
   String complexityCategory = '';
   String riskAssessment = '';
-  List<String> refactoringSuggestions = [];
   Token token;
 
   MethodComplexityMetrics(this.name, this.type, this.token);
