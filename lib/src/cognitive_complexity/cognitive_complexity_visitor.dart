@@ -4,7 +4,7 @@ import 'package:klin_dart/src/cognitive_complexity/config.dart';
 
 /// AST visitor that collects method declarations and calculates complexity.
 class MethodVisitor extends RecursiveAstVisitor<void> {
-  Map<String, MethodComplexityMetrics> methodMetrics = {};
+  final Map<String, MethodComplexityMetrics> methodMetrics = {};
 
   MethodDeclaration? currentMethod;
   FunctionDeclaration? currentFunction;
@@ -18,12 +18,11 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
       node.name.toString(),
       'method',
       node.name,
-    );
-    metrics.numberOfParameters = node.parameters?.parameters.length ?? 0;
+    )..numberOfParameters = node.parameters?.parameters.length ?? 0;
 
     methodMetrics[node.name.toString()] = metrics;
     currentMethod = node;
-    currentFunction = null; // Clear any function context
+    currentFunction = null;
     super.visitMethodDeclaration(node);
     currentMethod = null;
     currentNestingLevel = 0;
@@ -35,17 +34,11 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
       node.name.toString(),
       'function',
       node.name,
-    );
-
-    // Get parameters from the function's expression
-    if (node.functionExpression.parameters != null) {
-      metrics.numberOfParameters =
-          node.functionExpression.parameters!.parameters.length;
-    }
+    )..numberOfParameters = node.functionExpression.parameters?.parameters.length ?? 0;
 
     methodMetrics[node.name.toString()] = metrics;
     currentFunction = node;
-    currentMethod = null; // Clear any method context
+    currentMethod = null;
     super.visitFunctionDeclaration(node);
     currentFunction = null;
     currentNestingLevel = 0;
@@ -58,11 +51,9 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
   @override
   void visitIfStatement(IfStatement node) {
     _incrementComplexity(1);
-
     if (currentNestingLevel > 0) {
-      _incrementComplexity(currentNestingLevel);
+      _incrementComplexity(1);
     }
-
     currentNestingLevel++;
     super.visitIfStatement(node);
     currentNestingLevel--;
@@ -72,7 +63,7 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
   void visitForStatement(ForStatement node) {
     _incrementComplexity(1);
     if (currentNestingLevel > 0) {
-      _incrementComplexity(currentNestingLevel);
+      _incrementComplexity(1);
     }
     currentNestingLevel++;
     super.visitForStatement(node);
@@ -83,7 +74,7 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
   void visitWhileStatement(WhileStatement node) {
     _incrementComplexity(1);
     if (currentNestingLevel > 0) {
-      _incrementComplexity(currentNestingLevel);
+      _incrementComplexity(1);
     }
     currentNestingLevel++;
     super.visitWhileStatement(node);
@@ -94,7 +85,7 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
   void visitSwitchStatement(SwitchStatement node) {
     _incrementComplexity(1);
     if (currentNestingLevel > 0) {
-      _incrementComplexity(currentNestingLevel);
+      _incrementComplexity(1);
     }
     currentNestingLevel++;
     super.visitSwitchStatement(node);
@@ -105,7 +96,7 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
   void visitTryStatement(TryStatement node) {
     _incrementComplexity(1);
     if (currentNestingLevel > 0) {
-      _incrementComplexity(currentNestingLevel);
+      _incrementComplexity(1);
     }
     currentNestingLevel++;
     super.visitTryStatement(node);
@@ -117,15 +108,16 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
   // ------------------------
   @override
   void visitBinaryExpression(BinaryExpression node) {
-    if (node.operator.type.lexeme == '&&' ||
-        node.operator.type.lexeme == '||') {
+    final op = node.operator.type.lexeme;
+    // count only once for the outermost logical expression
+    if ((op == '&&' || op == '||') && node.parent is! BinaryExpression) {
       _incrementComplexity(1);
     }
     super.visitBinaryExpression(node);
   }
 
   // ------------------------
-  // Jump Statements
+  // Nested functions and jumps
   // ------------------------
   @override
   void visitFunctionExpression(FunctionExpression node) {
@@ -135,8 +127,7 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
     }
 
     if (currentMethod != null || currentFunction != null) {
-      _incrementComplexity(2); // Higher penalty for nested functions
-
+      _incrementComplexity(2);
       currentNestingLevel++;
       super.visitFunctionExpression(node);
       currentNestingLevel--;
@@ -163,18 +154,12 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
     super.visitThrowExpression(node);
   }
 
+  /// Increment complexity for the current method/function
   void _incrementComplexity(int amount) {
-    if (currentMethod != null) {
-      var metrics = methodMetrics[currentMethod!.name.toString()]!;
+    final key = currentMethod?.name.toString() ?? currentFunction?.name.toString();
+    if (key != null) {
+      final metrics = methodMetrics[key]!;
       metrics.cognitiveComplexity += amount;
-
-      if (currentNestingLevel > metrics.nestingLevel) {
-        metrics.nestingLevel = currentNestingLevel;
-      }
-    } else if (currentFunction != null) {
-      var metrics = methodMetrics[currentFunction!.name.toString()]!;
-      metrics.cognitiveComplexity += amount;
-
       if (currentNestingLevel > metrics.nestingLevel) {
         metrics.nestingLevel = currentNestingLevel;
       }
@@ -183,50 +168,38 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
 
   /// Determines if a function expression is used as an argument in a method call
   bool _isInMethodInvocation(FunctionExpression node) {
-    var parent = node.parent;
-
-    // Handle direct parent as method invocation
+    final parent = node.parent;
     if (parent is ArgumentList && parent.parent is MethodInvocation) {
       return true;
     }
-
-    // Handle parent as expression in argument list
     if (parent is Expression &&
         parent.parent is ArgumentList &&
-        parent.parent?.parent is MethodInvocation) {
+        parent.parent!.parent is MethodInvocation) {
       return true;
     }
-
-    if (parent is FunctionDeclaration) {
-      return true;
-    }
-
-    return false;
+    return parent is FunctionDeclaration;
   }
 
-  /// Process collected methods and generate analysis results
+  /// Process collected methods: categorize and return metrics
   Map<String, MethodComplexityMetrics> analyzeCollectedMethods() {
-    for (var entry in methodMetrics.entries) {
-      _categorizeComplexity(entry.value);
-    }
-
+    methodMetrics.values.forEach(_categorizeComplexity);
     return methodMetrics;
   }
 
-  /// Categorize complexity and set risk assessment
-  void _categorizeComplexity(MethodComplexityMetrics metrics) {
-    if (metrics.cognitiveComplexity > ComplexityCategory.high.value) {
-      metrics.complexityCategory = "High";
-      metrics.riskAssessment =
-          "❌ High Complexity (Score: ${metrics.cognitiveComplexity}) - Refactor recommended!";
-    } else if (metrics.cognitiveComplexity > ComplexityCategory.medium.value) {
-      metrics.complexityCategory = "Medium";
-      metrics.riskAssessment =
-          "⚠️ Medium Complexity (Score: ${metrics.cognitiveComplexity}) - Consider simplifying this ${metrics.type}";
+  /// Assigns complexity category and risk message
+  void _categorizeComplexity(MethodComplexityMetrics m) {
+    if (m.cognitiveComplexity > ComplexityCategory.high.value) {
+      m.complexityCategory = 'High';
+      m.riskAssessment =
+          '❌ High Complexity (Score: ${m.cognitiveComplexity}) - Refactor recommended!';
+    } else if (m.cognitiveComplexity > ComplexityCategory.medium.value) {
+      m.complexityCategory = 'Medium';
+      m.riskAssessment =
+          '⚠️ Medium Complexity (Score: ${m.cognitiveComplexity}) - Consider simplifying this ${m.type}';
     } else {
-      metrics.complexityCategory = "Low";
-      metrics.riskAssessment =
-          "✅ Low Complexity (Score: ${metrics.cognitiveComplexity}) - Everything looks good!";
+      m.complexityCategory = 'Low';
+      m.riskAssessment =
+          '✅ Low Complexity (Score: ${m.cognitiveComplexity}) - Everything looks good!';
     }
   }
 }
