@@ -15,10 +15,3 @@ class _KlinLinter extends PluginBase {
     ];
   }
 }
-
-// CognitiveComplexityRule
-// [cognitive_complexity] 2025-05-16T09:42:01.738358 Method: _incrementComplexity - Complexity: 8
-// [cognitive_complexity] 2025-05-16T09:42:01.739480 Method: _isInMethodInvocation - Complexity: 6
-// [cognitive_complexity] 2025-05-16T09:42:01.739579 Method: analyzeCollectedMethods - Complexity: 9
-// [cognitive_complexity] 2025-05-16T09:42:01.765647 Method: checkRecordType - Complexity: 6
-// [cognitive_complexity] 2025-05-16T09:42:01.774118 Method: calculateScore - Complexity: 10
