@@ -16,11 +16,6 @@ class _KlinLinter extends PluginBase {
   }
 }
 
-// CognitiveComplexityLintRule
-// [cognitive_complexity] 2025-05-15T12:28:29.228325 Cognitive Complexity: 6 for _incrementComplexity
-// [cognitive_complexity] 2025-05-15T12:28:29.229429 Cognitive Complexity: 8 for analyzeCollectedMethods
-// [cognitive_complexity] 2025-05-15T12:28:29.263585 Cognitive Complexity: 11 for calculateScore
-
 // CognitiveComplexityRule
 // [cognitive_complexity] 2025-05-16T09:42:01.738358 Method: _incrementComplexity - Complexity: 8
 // [cognitive_complexity] 2025-05-16T09:42:01.739480 Method: _isInMethodInvocation - Complexity: 6

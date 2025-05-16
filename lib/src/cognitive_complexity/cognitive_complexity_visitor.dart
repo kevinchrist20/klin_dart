@@ -215,11 +215,11 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
 
   /// Categorize complexity and set risk assessment
   void _categorizeComplexity(MethodComplexityMetrics metrics) {
-    if (metrics.cognitiveComplexity > 15) {
+    if (metrics.cognitiveComplexity > ComplexityCategory.high.value) {
       metrics.complexityCategory = "High";
       metrics.riskAssessment =
           "❌ High Complexity (Score: ${metrics.cognitiveComplexity}) - Refactor recommended!";
-    } else if (metrics.cognitiveComplexity > 8) {
+    } else if (metrics.cognitiveComplexity > ComplexityCategory.medium.value) {
       metrics.complexityCategory = "Medium";
       metrics.riskAssessment =
           "⚠️ Medium Complexity (Score: ${metrics.cognitiveComplexity}) - Consider simplifying this ${metrics.type}";
