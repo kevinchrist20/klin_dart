@@ -1,3 +1,6 @@
 ## 1.0.0
 
-- Initial version.
+- Initial stable release
+- Core functionality implemented
+- Documentation completed
+- All tests passing
