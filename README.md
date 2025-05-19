@@ -21,13 +21,10 @@ To use KlinDart in your project:
 
 ```yaml
 # pubspec.yaml
-dependencies:
-  custom_lint: any
 
 dev_dependencies:
-  klin_dart:
-    git:
-      url: https://github.com/kevinchrist20/klin_dart
+  custom_lint:
+  klin_dart: <latest_version>
 
 ```
 
@@ -35,10 +32,11 @@ dev_dependencies:
 
 ```yaml
 # analysis_options.yaml
-include: package:custom_lint/analysis_options.yaml
 analyzer:
   plugins:
     - custom_lint
+
+custom_lint:
 
 ```
 
