@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:klin_dart/src/utils/widget_utils.dart';
 
 /// Extensions for AST nodes to determine their relation to widgets
@@ -14,11 +14,11 @@ extension WidgetContextExtensions on AstNode {
     final creation = thisOrAncestorOfType<InstanceCreationExpression>();
     if (creation == null) return false;
     
-    final constructorElement = creation.constructorName.staticElement;
+    final constructorElement = creation.constructorName.element;
     if (constructorElement == null) return false;
     
-    final classElement = constructorElement.enclosingElement;
-    return classElement is ClassElement && classElement.isWidget();
+    final classElement = constructorElement.enclosingElement2;
+    return classElement is ClassElement2 && classElement.isWidget();
   }
 
   /// Checks if this node is a parameter to a widget property
@@ -31,9 +31,9 @@ extension WidgetContextExtensions on AstNode {
     // Check constructor invocation
     if (parent is ArgumentList && parent.parent is InstanceCreationExpression) {
       final creation = parent.parent as InstanceCreationExpression;
-      final constructorElement = creation.constructorName.staticElement;
-      if (constructorElement?.enclosingElement is ClassElement) {
-        return (constructorElement!.enclosingElement as ClassElement).isWidget();
+      final constructorElement = creation.constructorName.element;
+      if (constructorElement?.enclosingElement2 is ClassElement2) {
+        return (constructorElement!.enclosingElement2 as ClassElement2).isWidget();
       }
     }
     
