@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
+import 'package:klin_dart/src/utils/constants.dart';
 
 /// Extensions for widget-related checks on ClassElement2
 extension WidgetClassChecks on ClassElement2 {
@@ -50,7 +51,7 @@ extension WidgetClassChecks on ClassElement2 {
 
     if (widgetBaseClasses.contains(name3)) {
       final libraryPath = library2.uri.toString();
-      return libraryPath.contains('flutter');
+      return libraryPath.contains(Constants.flutter);
     }
 
     return false;
@@ -59,17 +60,17 @@ extension WidgetClassChecks on ClassElement2 {
   /// Checks if this class has a build method that takes a BuildContext
   bool hasBuildMethod() {
     return methods2.any((method) =>
-        method.name3 == 'build' &&
+        method.name3 == Constants.build &&
         method.formalParameters[0].type
             .getDisplayString()
-            .contains('BuildContext'));
+            .contains(Constants.buildContext));
   }
 
   /// Checks if this class has a createState method that returns a State with a build method
   bool hasCreateStateMethod() {
     return methods2.any(
       (method) =>
-          method.name3 == 'createState' &&
+          method.name3 == Constants.createState &&
           method.returnType.element3 is ClassElement2 &&
           (method.returnType.element3 as ClassElement2).hasBuildMethod(),
     );

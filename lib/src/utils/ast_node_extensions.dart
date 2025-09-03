@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element2.dart';
+import 'package:klin_dart/src/utils/constants.dart';
 import 'package:klin_dart/src/utils/widget_utils.dart';
 
 /// Extensions for AST nodes to determine their relation to widgets
@@ -45,5 +46,15 @@ extension WidgetContextExtensions on AstNode {
     }
     
     return false;
+  }
+
+  /// Checks if this node is a method declaration within a widget context
+  bool isWidgetBuildMethod() {
+    final method = thisOrAncestorOfType<MethodDeclaration>();
+    if (method == null) return false;
+
+    final returnType = method.returnType;
+
+    return method.name.toString() == Constants.build && returnType?.toSource() == Constants.widget;
   }
 }

@@ -3,10 +3,12 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/source/line_info.dart';
 import 'package:analyzer/error/error.dart' as error;
+import 'package:klin_dart/src/utils/ast_node_extensions.dart';
 
 class FunctionLengthRule extends DartLintRule {
   /// The default maximum number of lines allowed in a function.
   static const _defaultMaxLines = 50;
+  static const buildMethodMaxLines = 100;
 
   /// The configurable maximum number of lines allowed.
   final int maxLines;
@@ -33,8 +35,8 @@ class FunctionLengthRule extends DartLintRule {
       _checkFunctionLength(
         node,
         node.functionExpression.body,
-        reporter,
-        resolver.lineInfo,
+        reporter: reporter,
+        lineInfo: resolver.lineInfo,
       );
     });
 
@@ -42,8 +44,8 @@ class FunctionLengthRule extends DartLintRule {
       _checkFunctionLength(
         node,
         node.body,
-        reporter,
-        resolver.lineInfo,
+        reporter: reporter,
+        lineInfo: resolver.lineInfo,
       );
     });
 
@@ -51,22 +53,31 @@ class FunctionLengthRule extends DartLintRule {
       _checkFunctionLength(
         node,
         node.body,
-        reporter,
-        resolver.lineInfo,
+        reporter: reporter,
+        lineInfo: resolver.lineInfo,
       );
     });
   }
 
   void _checkFunctionLength(
     AstNode node,
-    AstNode body,
-    ErrorReporter reporter,
-    LineInfo lineInfo,
-  ) {
+    AstNode body, {
+    required ErrorReporter reporter,
+    required LineInfo lineInfo,
+  }) {
     final startLine = lineInfo.getLocation(body.offset).lineNumber;
     final endLine = lineInfo.getLocation(body.end).lineNumber;
     final length = endLine - startLine + 1;
 
+    if (node.isWidgetBuildMethod() && length > FunctionLengthRule.buildMethodMaxLines) {
+      reporter.atNode(
+        node,
+        code,
+        arguments: [length.toString(), FunctionLengthRule.buildMethodMaxLines.toString()],
+      );
+      return;
+    } 
+    
     if (length > maxLines) {
       reporter.atNode(
         node,
