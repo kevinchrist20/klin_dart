@@ -1,10 +1,13 @@
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:analyzer/error/error.dart' as error;
+import 'package:klin_dart/src/utils/ast_node_extensions.dart';
 
 class ClassLengthRule extends DartLintRule {
   /// The default maximum number of lines allowed in a class.
   static const _defaultMaxLines = 200;
+
+  static const _statefulWidgetMaxLines = 300;
 
   /// The configurable maximum number of lines allowed.
   final int maxLines;
@@ -32,6 +35,17 @@ class ClassLengthRule extends DartLintRule {
       final startLine = lineInfo.getLocation(node.offset).lineNumber;
       final endLine = lineInfo.getLocation(node.end).lineNumber;
       final length = endLine - startLine + 1;
+
+      if(node.isStatefulWidgetClass()) {
+        if(length > _statefulWidgetMaxLines) {
+          reporter.atNode(
+            node,
+            code,
+            arguments: [length.toString(), _statefulWidgetMaxLines.toString()],
+          );
+        }
+        return;
+      }
 
       if (length > maxLines) {
         reporter.atNode(

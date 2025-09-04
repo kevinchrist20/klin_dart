@@ -7,3 +7,8 @@
 pubspec.lock
 .DS_Store
 **/**.DS_Store
+
+# FVM Version Cache
+.fvm/
+
+.vscode/

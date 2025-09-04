@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:analyzer/error/error.dart' as error;
@@ -29,7 +30,14 @@ class FileLengthRule extends DartLintRule {
   ) {
     context.registry.addCompilationUnit((node) {
       final lineInfo = resolver.lineInfo;
-      final totalLines = lineInfo.lineCount;
+      var totalLines = lineInfo.lineCount;
+
+      node.directives.whereType<ImportDirective>().forEach((import) {
+        final importStartLine = lineInfo.getLocation(import.offset).lineNumber;
+        final importEndLine =
+            lineInfo.getLocation(import.end).lineNumber;
+        totalLines -= (importEndLine - importStartLine + 1);
+      });
 
       if (totalLines > maxLines) {
         reporter.atNode(
