@@ -69,12 +69,14 @@ class FunctionLengthRule extends DartLintRule {
     final endLine = lineInfo.getLocation(body.end).lineNumber;
     final length = endLine - startLine + 1;
 
-    if (node.isWidgetBuildMethod() && length > FunctionLengthRule.buildMethodMaxLines) {
-      reporter.atNode(
-        node,
-        code,
-        arguments: [length.toString(), FunctionLengthRule.buildMethodMaxLines.toString()],
-      );
+    if (node.isWidgetBuildMethod()) {
+      if (length > FunctionLengthRule.buildMethodMaxLines) {
+        reporter.atNode(
+          node,
+          code,
+          arguments: [length.toString(), FunctionLengthRule.buildMethodMaxLines.toString()],
+        );
+      }
       return;
     } 
     
