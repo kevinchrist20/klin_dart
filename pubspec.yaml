@@ -1,6 +1,6 @@
 name: klin_dart
 description: KlinDart is a collection of opinionated custom lint rules for Dart and Flutter projects. It focuses on improving code readability, maintainability, and scalability by enforcing architectural and stylistic best practices.
-version: 1.0.0
+version: 1.1.0
 repository: https://github.com/kevinchrist20/klin_dart
 
 environment:
