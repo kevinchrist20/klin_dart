@@ -5,14 +5,20 @@ import 'package:klin_dart/src/utils/ast_node_extensions.dart';
 
 class ClassLengthRule extends DartLintRule {
   /// The default maximum number of lines allowed in a class.
-  static const _defaultMaxLines = 200;
+  static const _defaultMaxLines = 300;
 
-  static const _statefulWidgetMaxLines = 300;
+  static const _defaultStatefulWidgetMaxLines = 500;
 
   /// The configurable maximum number of lines allowed.
   final int maxLines;
 
-  ClassLengthRule({this.maxLines = _defaultMaxLines})
+  /// The configurable maximum number of lines allowed for StatefulWidget/State classes.
+  final int statefulWidgetMaxLines;
+
+  ClassLengthRule({
+    this.maxLines = _defaultMaxLines,
+    this.statefulWidgetMaxLines = _defaultStatefulWidgetMaxLines,
+  })
       : super(
           code: LintCode(
             name: 'class_length',
@@ -37,11 +43,11 @@ class ClassLengthRule extends DartLintRule {
       final length = endLine - startLine + 1;
 
       if(node.isStatefulWidgetClass()) {
-        if(length > _statefulWidgetMaxLines) {
+        if(length > statefulWidgetMaxLines) {
           reporter.atNode(
             node,
             code,
-            arguments: [length.toString(), _statefulWidgetMaxLines.toString()],
+            arguments: [length.toString(), statefulWidgetMaxLines.toString()],
           );
         }
         return;

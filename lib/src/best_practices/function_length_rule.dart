@@ -8,12 +8,18 @@ import 'package:klin_dart/src/utils/ast_node_extensions.dart';
 class FunctionLengthRule extends DartLintRule {
   /// The default maximum number of lines allowed in a function.
   static const _defaultMaxLines = 50;
-  static const buildMethodMaxLines = 100;
+  static const _defaultBuildMethodMaxLines = 100;
 
   /// The configurable maximum number of lines allowed.
   final int maxLines;
 
-  FunctionLengthRule({this.maxLines = _defaultMaxLines})
+  /// The configurable maximum number of lines allowed for widget build() methods.
+  final int buildMethodMaxLines;
+
+  FunctionLengthRule({
+    this.maxLines = _defaultMaxLines,
+    this.buildMethodMaxLines = _defaultBuildMethodMaxLines,
+  })
       : super(
           code: LintCode(
             name: 'function_length',
@@ -70,11 +76,11 @@ class FunctionLengthRule extends DartLintRule {
     final length = endLine - startLine + 1;
 
     if (node.isWidgetBuildMethod()) {
-      if (length > FunctionLengthRule.buildMethodMaxLines) {
+      if (length > buildMethodMaxLines) {
         reporter.atNode(
           node,
           code,
-          arguments: [length.toString(), FunctionLengthRule.buildMethodMaxLines.toString()],
+          arguments: [length.toString(), buildMethodMaxLines.toString()],
         );
       }
       return;
