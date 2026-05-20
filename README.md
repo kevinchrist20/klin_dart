@@ -37,7 +37,31 @@ analyzer:
     - custom_lint
 
 custom_lint:
+```
 
+## ⚙️ Configuration
+
+All rule thresholds can be customized in `analysis_options.yaml`. Each rule is optional — omit any entry to use the default.
+
+```yaml
+# analysis_options.yaml
+analyzer:
+  plugins:
+    - custom_lint
+
+custom_lint:
+  rules:
+    - class_length:
+        max_lines: 300                    # default: 300
+        stateful_widget_max_lines: 500    # default: 500
+    - file_length:
+        max_lines: 500                    # default: 500
+    - function_length:
+        max_lines: 50                     # default: 50
+        build_method_max_lines: 100       # default: 100
+    - cognitive_complexity:
+        medium_threshold: 10              # default: 10  (warning)
+        high_threshold: 15               # default: 15  (error)
 ```
 
 ## 📖 Philosophy

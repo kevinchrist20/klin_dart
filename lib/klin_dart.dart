@@ -11,13 +11,29 @@ PluginBase createPlugin() => _KlinLinter();
 class _KlinLinter extends PluginBase {
   @override
   List<LintRule> getLintRules(CustomLintConfigs configs) {
+    final classConfig = configs.rules['class_length']?.json;
+    final fileConfig = configs.rules['file_length']?.json;
+    final functionConfig = configs.rules['function_length']?.json;
+    final complexityConfig = configs.rules['cognitive_complexity']?.json;
+
     return [
       AvoidHardcodedStringsInWidgetsRule(),
       AvoidStringLiteralsInLogicRule(),
-      CognitiveComplexityRule(),
-      FunctionLengthRule(),
-      ClassLengthRule(),
-      FileLengthRule(),
+      CognitiveComplexityRule(
+        mediumThreshold: complexityConfig?['medium_threshold'] as int? ?? 10,
+        highThreshold: complexityConfig?['high_threshold'] as int? ?? 15,
+      ),
+      FunctionLengthRule(
+        maxLines: functionConfig?['max_lines'] as int? ?? 50,
+        buildMethodMaxLines: functionConfig?['build_method_max_lines'] as int? ?? 100,
+      ),
+      ClassLengthRule(
+        maxLines: classConfig?['max_lines'] as int? ?? 200,
+        statefulWidgetMaxLines: classConfig?['stateful_widget_max_lines'] as int? ?? 300,
+      ),
+      FileLengthRule(
+        maxLines: fileConfig?['max_lines'] as int? ?? 500,
+      ),
     ];
   }
 }
