@@ -102,8 +102,8 @@ Thresholds are configurable per project via `analysis_options.yaml`:
 custom_lint:
   rules:
     - cognitive_complexity:
-        medium_threshold: 10   # default: 10 — scores above this trigger a warning
-        high_threshold: 15     # default: 15 — scores above this trigger an error
+        medium_threshold: 10   # default: 10 — scores at or above this trigger a warning
+        high_threshold: 15     # default: 15 — scores at or above this trigger an error
 ```
 
 Lower the thresholds for stricter standards, or raise them temporarily while refactoring legacy code.
