@@ -13,9 +13,9 @@ Prevents classes from growing beyond a configurable line limit. Excessively long
 | Context | Default maximum |
 |---------|----------------|
 | Regular classes | **300 lines** |
-| `StatefulWidget` classes | **500 lines** |
+| `State`/`ConsumerState` subclasses whose name contains `Screen` or `State` | **500 lines** |
 
-`StatefulWidget` subclasses receive a higher allowance because they naturally contain both the widget shell and the associated `State` class code.
+This higher allowance is applied via a name-and-extends heuristic: a class must both extend `State` or `ConsumerState` **and** have `Screen` or `State` in its own name. All other classes use the regular limit.
 
 ## When It Triggers
 

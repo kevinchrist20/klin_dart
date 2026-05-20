@@ -12,10 +12,11 @@ Flags raw string literals used inside conditions, comparisons, or other logic co
 
 This rule fires when a string literal appears in a **logic context**, such as:
 
-- Equality or relational comparisons (`==`, `!=`)
-- Conditional expressions (`if`, `? :`)
-- Switch-case values
-- Domain-variable assignments where the value drives program behaviour
+- Equality comparisons (`==`, `!=`) inside an `if`, ternary, `while`, or `switch` expression
+- Switch-case pattern values
+- Assignments to variables whose name contains a domain keyword (`status`, `type`, `role`, `level`, `plan`, `membership`, `category`)
+- Arguments to method invocations whose name contains `check`, `update`, `change`, `set`, `compare`, or `is`
+- Named parameters whose name contains `type` or `status`
 
 Blank/whitespace-only strings are ignored.
 

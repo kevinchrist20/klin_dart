@@ -28,8 +28,8 @@ class _KlinLinter extends PluginBase {
         buildMethodMaxLines: functionConfig?['build_method_max_lines'] as int? ?? 100,
       ),
       ClassLengthRule(
-        maxLines: classConfig?['max_lines'] as int? ?? 200,
-        statefulWidgetMaxLines: classConfig?['stateful_widget_max_lines'] as int? ?? 300,
+        maxLines: classConfig?['max_lines'] as int? ?? 300,
+        statefulWidgetMaxLines: classConfig?['stateful_widget_max_lines'] as int? ?? 500,
       ),
       FileLengthRule(
         maxLines: fileConfig?['max_lines'] as int? ?? 500,

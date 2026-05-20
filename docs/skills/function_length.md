@@ -23,7 +23,7 @@ The rule measures the line span from the opening brace of a function/method body
 
 - Top-level function declarations
 - Class method declarations
-- Anonymous function expressions
+- Anonymous function expressions (including callbacks and lambdas)
 
 ## Bad Examples
 

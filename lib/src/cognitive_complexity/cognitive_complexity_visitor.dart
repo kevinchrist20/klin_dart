@@ -50,10 +50,7 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitIfStatement(IfStatement node) {
-    _incrementComplexity(1);
-    if (currentNestingLevel > 0) {
-      _incrementComplexity(1);
-    }
+    _incrementComplexity(1 + currentNestingLevel);
     currentNestingLevel++;
     super.visitIfStatement(node);
     currentNestingLevel--;
@@ -61,10 +58,7 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitForStatement(ForStatement node) {
-    _incrementComplexity(1);
-    if (currentNestingLevel > 0) {
-      _incrementComplexity(1);
-    }
+    _incrementComplexity(1 + currentNestingLevel);
     currentNestingLevel++;
     super.visitForStatement(node);
     currentNestingLevel--;
@@ -72,10 +66,7 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitWhileStatement(WhileStatement node) {
-    _incrementComplexity(1);
-    if (currentNestingLevel > 0) {
-      _incrementComplexity(1);
-    }
+    _incrementComplexity(1 + currentNestingLevel);
     currentNestingLevel++;
     super.visitWhileStatement(node);
     currentNestingLevel--;
@@ -83,10 +74,7 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitSwitchStatement(SwitchStatement node) {
-    _incrementComplexity(1);
-    if (currentNestingLevel > 0) {
-      _incrementComplexity(1);
-    }
+    _incrementComplexity(1 + currentNestingLevel);
     currentNestingLevel++;
     super.visitSwitchStatement(node);
     currentNestingLevel--;
@@ -94,10 +82,7 @@ class MethodVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitTryStatement(TryStatement node) {
-    _incrementComplexity(1);
-    if (currentNestingLevel > 0) {
-      _incrementComplexity(1);
-    }
+    _incrementComplexity(1 + currentNestingLevel);
     currentNestingLevel++;
     super.visitTryStatement(node);
     currentNestingLevel--;

@@ -13,8 +13,8 @@ Measures how difficult a function or method is to mentally understand. Unlike cy
 | Score range | Category | Severity |
 |-------------|----------|----------|
 | 0 – 10 | 🟢 Low | No report |
-| 11 – 15 | 🟡 Medium | **Warning** |
-| > 15 | 🔴 High | **Error** |
+| 11 – 14 | 🟡 Medium | **Warning** |
+| ≥ 15 | 🔴 High | **Error** |
 
 ## Scoring Rules
 
