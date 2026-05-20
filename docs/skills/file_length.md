@@ -6,7 +6,7 @@
 **Severity:** Warning  
 **Category:** Best Practices
 
-Warns when a Dart source file contains more lines of substantive code than a configurable threshold. Overly large files are a sign that a single file is carrying too many responsibilities, making it harder to navigate, review, and maintain.
+Warns when a Dart source file contains more total lines, excluding `import` directives, than a configurable threshold. Overly large files are a sign that a single file is carrying too many responsibilities, making it harder to navigate, review, and maintain.
 
 ## Threshold
 
