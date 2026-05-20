@@ -96,17 +96,17 @@ void _processSubItem(SubItem sub) {
 
 ## Configuration
 
-Complexity thresholds are defined as an enum in `config.dart`:
+Thresholds are configurable per project via `analysis_options.yaml`:
 
-```dart
-enum ComplexityCategory {
-  low(0),
-  medium(10),
-  high(15);
-}
+```yaml
+custom_lint:
+  rules:
+    - cognitive_complexity:
+        medium_threshold: 10   # default: 10 — scores above this trigger a warning
+        high_threshold: 15     # default: 15 — scores above this trigger an error
 ```
 
-Adjust these values to tune the sensitivity of the rule for your project.
+Lower the thresholds for stricter standards, or raise them temporarily while refactoring legacy code.
 
 ## Why This Matters
 

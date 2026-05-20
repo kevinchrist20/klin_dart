@@ -52,19 +52,16 @@ class ProductModel { ... }
 
 ## Configuration
 
-The default maximum is defined as a constant in the rule implementation:
+The threshold is configurable per project via `analysis_options.yaml`:
 
-```dart
-static const _defaultMaxLines = 500;
+```yaml
+custom_lint:
+  rules:
+    - file_length:
+        max_lines: 500   # default: 500
 ```
 
-The `maxLines` parameter can be overridden when constructing the rule:
-
-```dart
-FileLengthRule(maxLines: 300)
-```
-
-This allows projects to enforce a stricter or more relaxed limit based on their conventions.
+Lower the value for stricter projects or raise it for files that are intentionally large (e.g., generated code wrappers).
 
 ## Why This Matters
 

@@ -12,8 +12,8 @@ Prevents classes from growing beyond a configurable line limit. Excessively long
 
 | Context | Default maximum |
 |---------|----------------|
-| Regular classes | **200 lines** |
-| `StatefulWidget` classes | **300 lines** |
+| Regular classes | **300 lines** |
+| `StatefulWidget` classes | **500 lines** |
 
 `StatefulWidget` subclasses receive a higher allowance because they naturally contain both the widget shell and the associated `State` class code.
 
@@ -24,17 +24,17 @@ The rule measures the total line span of a class declaration — from the openin
 ## Bad Examples
 
 ```dart
-// ❌ A service class that has grown to 250 lines by accumulating
+// ❌ A service class that has grown to 320 lines by accumulating
 //    unrelated responsibilities (data access, formatting, validation, etc.)
 class UserService {
-  // ... 250 lines of mixed concerns ...
+  // ... 320 lines of mixed concerns ...
 }
 
-// ❌ A StatefulWidget whose State class contains 350 lines
+// ❌ A StatefulWidget whose State class contains 520 lines
 //    of interleaved lifecycle, UI, and business logic
 class DashboardPage extends StatefulWidget { ... }
 class _DashboardPageState extends State<DashboardPage> {
-  // ... 350 lines ...
+  // ... 520 lines ...
 }
 ```
 
@@ -43,7 +43,7 @@ class _DashboardPageState extends State<DashboardPage> {
 ```dart
 // ✅ Each class has a single, well-defined responsibility
 class UserRepository {
-  // Data access only — well under 200 lines
+  // Data access only — well under 300 lines
 }
 
 class UserValidator {
@@ -74,14 +74,17 @@ class DashboardController {
 
 ## Configuration
 
-The default thresholds are defined as constants in the rule implementation:
+Thresholds are configurable per project via `analysis_options.yaml`:
 
-```dart
-static const _defaultMaxLines        = 200;  // regular classes
-static const _statefulWidgetMaxLines = 300;  // StatefulWidget subclasses
+```yaml
+custom_lint:
+  rules:
+    - class_length:
+        max_lines: 300                   # default: 300
+        stateful_widget_max_lines: 500   # default: 500
 ```
 
-The `maxLines` parameter can be overridden when constructing the rule, allowing projects to tune the threshold to their standards.
+Set lower values for stricter projects or raise them for codebases with intentionally larger classes.
 
 ## Why This Matters
 

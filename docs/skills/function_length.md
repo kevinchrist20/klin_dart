@@ -81,14 +81,17 @@ Widget _buildBody(BuildContext context) { ... }
 
 ## Configuration
 
-The default maximum line counts are defined as constants in the rule implementation:
+Thresholds are configurable per project via `analysis_options.yaml`:
 
-```dart
-static const _defaultMaxLines = 50;        // regular functions
-static const buildMethodMaxLines = 100;    // widget build methods
+```yaml
+custom_lint:
+  rules:
+    - function_length:
+        max_lines: 50              # default: 50
+        build_method_max_lines: 100  # default: 100
 ```
 
-These can be adjusted by modifying the rule source or by extending the rule in a custom lint configuration.
+Raise `build_method_max_lines` if your project uses complex declarative widget trees; lower `max_lines` for stricter function-length discipline.
 
 ## Why This Matters
 
