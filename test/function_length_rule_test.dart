@@ -6,7 +6,7 @@ import 'test_utils.dart';
 void main() {
   group('FunctionLengthRule', () {
     test('reports a function that exceeds maxLines', () async {
-      final rule = FunctionLengthRule(maxLines: 3);
+      final rule = FunctionLengthRule(config: {'max_lines': 3});      
       final file = writeToTempFile('''
 void longFunction() {
   int a = 1;
@@ -27,7 +27,7 @@ void longFunction() {
     });
 
     test('does not report a function within maxLines', () async {
-      final rule = FunctionLengthRule(maxLines: 20);
+      final rule = FunctionLengthRule(config: {'max_lines': 20});
       final file = writeToTempFile('''
 void shortFunction() {
   int a = 1;
@@ -43,7 +43,7 @@ void shortFunction() {
     test('uses buildMethodMaxLines for Widget.build() methods', () async {
       // maxLines is very small, but buildMethodMaxLines is generous.
       // The build() method should not trigger even though it exceeds maxLines.
-      final rule = FunctionLengthRule(maxLines: 3, buildMethodMaxLines: 50);
+      final rule = FunctionLengthRule(config: {'max_lines': 3, 'build_method_max_lines': 50});
       // isWidgetBuildMethod() matches methods named 'build' returning 'Widget'
       final file = writeToTempFile('''
 class Widget {}
@@ -68,7 +68,7 @@ class MyWidget {
     });
 
     test('reports a build() method that exceeds buildMethodMaxLines', () async {
-      final rule = FunctionLengthRule(maxLines: 50, buildMethodMaxLines: 3);
+      final rule = FunctionLengthRule(config: {'max_lines': 50, 'build_method_max_lines': 3});
       final file = writeToTempFile('''
 class Widget {}
 class BuildContext {}
@@ -92,7 +92,7 @@ class MyWidget {
     });
 
     test('reports a method that exceeds maxLines', () async {
-      final rule = FunctionLengthRule(maxLines: 3);
+      final rule = FunctionLengthRule(config: {'max_lines': 3});
       final file = writeToTempFile('''
 class Foo {
   void longMethod() {

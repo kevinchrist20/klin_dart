@@ -19,21 +19,10 @@ class _KlinLinter extends PluginBase {
     return [
       AvoidHardcodedStringsInWidgetsRule(),
       AvoidStringLiteralsInLogicRule(),
-      CognitiveComplexityRule(
-        mediumThreshold: complexityConfig?['medium_threshold'] as int? ?? 10,
-        highThreshold: complexityConfig?['high_threshold'] as int? ?? 15,
-      ),
-      FunctionLengthRule(
-        maxLines: functionConfig?['max_lines'] as int? ?? 50,
-        buildMethodMaxLines: functionConfig?['build_method_max_lines'] as int? ?? 100,
-      ),
-      ClassLengthRule(
-        maxLines: classConfig?['max_lines'] as int? ?? 300,
-        statefulWidgetMaxLines: classConfig?['stateful_widget_max_lines'] as int? ?? 500,
-      ),
-      FileLengthRule(
-        maxLines: fileConfig?['max_lines'] as int? ?? 500,
-      ),
+      CognitiveComplexityRule(config: complexityConfig),
+      FunctionLengthRule(config: functionConfig),
+      ClassLengthRule(config: classConfig),
+      FileLengthRule(config: fileConfig),
     ];
   }
 }

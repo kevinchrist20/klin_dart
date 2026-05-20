@@ -15,11 +15,10 @@ class ClassLengthRule extends DartLintRule {
   /// The configurable maximum number of lines allowed for StatefulWidget/State classes.
   final int statefulWidgetMaxLines;
 
-  ClassLengthRule({
-    this.maxLines = _defaultMaxLines,
-    this.statefulWidgetMaxLines = _defaultStatefulWidgetMaxLines,
-  })
-      : super(
+  ClassLengthRule({Map<String, Object?>? config})
+      : maxLines = config?['max_lines'] as int? ?? _defaultMaxLines,
+        statefulWidgetMaxLines = config?['stateful_widget_max_lines'] as int? ?? _defaultStatefulWidgetMaxLines,
+        super(
           code: LintCode(
             name: 'class_length',
             problemMessage:

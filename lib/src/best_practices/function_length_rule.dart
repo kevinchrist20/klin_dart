@@ -16,11 +16,10 @@ class FunctionLengthRule extends DartLintRule {
   /// The configurable maximum number of lines allowed for widget build() methods.
   final int buildMethodMaxLines;
 
-  FunctionLengthRule({
-    this.maxLines = _defaultMaxLines,
-    this.buildMethodMaxLines = _defaultBuildMethodMaxLines,
-  })
-      : super(
+  FunctionLengthRule({Map<String, Object?>? config})
+      : maxLines = config?['max_lines'] as int? ?? _defaultMaxLines,
+        buildMethodMaxLines = config?['build_method_max_lines'] as int? ?? _defaultBuildMethodMaxLines,
+        super(
           code: LintCode(
             name: 'function_length',
             problemMessage:

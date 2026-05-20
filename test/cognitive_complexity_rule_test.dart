@@ -5,15 +5,14 @@ import 'package:klin_dart/src/cognitive_complexity/cognitive_complexity_rule.dar
 import 'test_utils.dart';
 
 // Complexity scores used by the visitor:
-//   if/for/while/switch/try at nesting level 0: +1
-//   same structures at nesting level > 0: +1 (base) + 1 (nesting penalty) = +2
+//   if/for/while/switch/try at nesting level N: +1 (base) + N (nesting penalty)
 //   outermost && or || chain: +1
 
 void main() {
   group('CognitiveComplexityRule', () {
     test('does not report a function with complexity at or below mediumThreshold',
         () async {
-      final rule = CognitiveComplexityRule(mediumThreshold: 2, highThreshold: 5);
+      final rule = CognitiveComplexityRule(config: {'medium_threshold': 2, 'high_threshold': 5});
       // Single if → complexity 1, which is NOT > 2 → no report
       final file = writeToTempFile('''
 int simple(int x) {
@@ -32,10 +31,10 @@ int simple(int x) {
 
     test('reports a WARNING for complexity above mediumThreshold but below highThreshold',
         () async {
-      final rule = CognitiveComplexityRule(mediumThreshold: 2, highThreshold: 5);
+      final rule = CognitiveComplexityRule(config: {'medium_threshold': 2, 'high_threshold': 5});
       // Double-nested if:
       //   outer if at level 0 → +1
-      //   inner if at level 1 → +1 (base) + 1 (nesting) = +2
+      //   inner if at level 1 → +2
       //   total = 3 → 3 > 2 and 3 < 5 → WARNING
       final file = writeToTempFile('''
 int mediumComplex(int a, int b) {
@@ -59,12 +58,12 @@ int mediumComplex(int a, int b) {
     });
 
     test('reports an ERROR for complexity at or above highThreshold', () async {
-      final rule = CognitiveComplexityRule(mediumThreshold: 2, highThreshold: 5);
+      final rule = CognitiveComplexityRule(config: {'medium_threshold': 2, 'high_threshold': 5});
       // Triple-nested if:
       //   outer if at level 0 → +1
       //   middle if at level 1 → +2
-      //   inner if at level 2 → +2
-      //   total = 5 → 5 >= 5 → ERROR
+      //   inner if at level 2 → +3
+      //   total = 6 → 6 >= 5 → ERROR
       final file = writeToTempFile('''
 int highComplex(int a, int b, int c) {
   if (a > 0) {
@@ -90,7 +89,7 @@ int highComplex(int a, int b, int c) {
 
     test('respects custom mediumThreshold', () async {
       // With a very low threshold, even a single if triggers a warning
-      final rule = CognitiveComplexityRule(mediumThreshold: 0, highThreshold: 10);
+      final rule = CognitiveComplexityRule(config: {'medium_threshold': 0, 'high_threshold': 10});
       final file = writeToTempFile('''
 int withOneIf(int x) {
   if (x > 0) {
@@ -107,7 +106,7 @@ int withOneIf(int x) {
     });
 
     test('checks all functions in a file independently', () async {
-      final rule = CognitiveComplexityRule(mediumThreshold: 2, highThreshold: 5);
+      final rule = CognitiveComplexityRule(config: {'medium_threshold': 2, 'high_threshold': 5});
       // Two functions: one simple, one complex
       final file = writeToTempFile('''
 int simple(int x) {

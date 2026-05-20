@@ -15,10 +15,10 @@ class CognitiveComplexityRule extends DartLintRule {
   /// Complexity score at or above which an error is reported.
   final int highThreshold;
 
-  CognitiveComplexityRule({
-    this.mediumThreshold = _defaultMediumThreshold,
-    this.highThreshold = _defaultHighThreshold,
-  }) : super(
+  CognitiveComplexityRule({Map<String, Object?>? config})
+      : mediumThreshold = config?['medium_threshold'] as int? ?? _defaultMediumThreshold,
+        highThreshold = config?['high_threshold'] as int? ?? _defaultHighThreshold,
+        super(
           code: LintCode(
             name: _lintName,
             problemMessage: "",

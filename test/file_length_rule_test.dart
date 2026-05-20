@@ -6,7 +6,7 @@ import 'test_utils.dart';
 void main() {
   group('FileLengthRule', () {
     test('reports a file that exceeds maxLines', () async {
-      final rule = FileLengthRule(maxLines: 5);
+      final rule = FileLengthRule(config: {'max_lines': 5});
       final file = writeToTempFile('''
 void a() {}
 void b() {}
@@ -25,7 +25,7 @@ void h() {}
     });
 
     test('does not report a file within maxLines', () async {
-      final rule = FileLengthRule(maxLines: 20);
+      final rule = FileLengthRule(config: {'max_lines': 20});
       final file = writeToTempFile('''
 void a() {}
 void b() {}
@@ -40,7 +40,7 @@ void b() {}
     test('excludes import lines from the line count', () async {
       // Without exclusion: 4 imports + 4 functions = 8+ lines > 5.
       // With exclusion: only 4 function lines are counted → 4 NOT > 5 → no report.
-      final rule = FileLengthRule(maxLines: 5);
+      final rule = FileLengthRule(config: {'max_lines': 5});
       final file = writeToTempFile('''
 import 'dart:math';
 import 'dart:io';
@@ -59,7 +59,7 @@ void d() {}
     });
 
     test('error message contains actual and max line counts', () async {
-      final rule = FileLengthRule(maxLines: 3);
+      final rule = FileLengthRule(config: {'max_lines': 3});
       final file = writeToTempFile('''
 void a() {}
 void b() {}
