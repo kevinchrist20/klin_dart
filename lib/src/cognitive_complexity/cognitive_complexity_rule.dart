@@ -2,13 +2,23 @@ import 'package:analyzer/error/listener.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 import 'package:analyzer/error/error.dart' as error;
 import 'package:klin_dart/src/cognitive_complexity/cognitive_complexity_visitor.dart';
-import 'package:klin_dart/src/cognitive_complexity/config.dart';
 
 class CognitiveComplexityRule extends DartLintRule {
   static const _lintName = 'cognitive_complexity';
 
-  CognitiveComplexityRule()
-      : super(
+  static const _defaultMediumThreshold = 10;
+  static const _defaultHighThreshold = 15;
+
+  /// Complexity score above which a warning is reported.
+  final int mediumThreshold;
+
+  /// Complexity score at or above which an error is reported.
+  final int highThreshold;
+
+  CognitiveComplexityRule({
+    this.mediumThreshold = _defaultMediumThreshold,
+    this.highThreshold = _defaultHighThreshold,
+  }) : super(
           code: LintCode(
             name: _lintName,
             problemMessage: "",
@@ -31,14 +41,14 @@ class CognitiveComplexityRule extends DartLintRule {
         final metrics = entry.value;
         final complexity = metrics.cognitiveComplexity;
 
-        if (complexity > ComplexityCategory.medium.value) {
+        if (complexity > mediumThreshold) {
           reporter.atToken(
             metrics.token,
             LintCode(
               name: _lintName,
               problemMessage: metrics.riskAssessment,
               uniqueName: '${_lintName}_${metrics.name}',
-              errorSeverity: complexity >= ComplexityCategory.high.value
+              errorSeverity: complexity >= highThreshold
                   ? error.ErrorSeverity.ERROR
                   : error.ErrorSeverity.WARNING,
             ),
