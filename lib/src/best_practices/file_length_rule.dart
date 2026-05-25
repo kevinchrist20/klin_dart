@@ -11,7 +11,7 @@ class FileLengthRule extends DartLintRule {
   final int maxLines;
 
   FileLengthRule({Map<String, Object?>? config})
-      : maxLines = config?['max_lines'] as int? ?? _defaultMaxLines,
+      : maxLines = int.tryParse(config?['max_lines']?.toString() ?? '') ?? _defaultMaxLines,
         super(
           code: LintCode(
             name: 'file_length',

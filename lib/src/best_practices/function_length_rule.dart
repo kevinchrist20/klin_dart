@@ -17,8 +17,8 @@ class FunctionLengthRule extends DartLintRule {
   final int buildMethodMaxLines;
 
   FunctionLengthRule({Map<String, Object?>? config})
-      : maxLines = config?['max_lines'] as int? ?? _defaultMaxLines,
-        buildMethodMaxLines = config?['build_method_max_lines'] as int? ?? _defaultBuildMethodMaxLines,
+      : maxLines = int.tryParse(config?['max_lines']?.toString() ?? '') ?? _defaultMaxLines,
+        buildMethodMaxLines = int.tryParse(config?['build_method_max_lines']?.toString() ?? '') ?? _defaultBuildMethodMaxLines,
         super(
           code: LintCode(
             name: 'function_length',
