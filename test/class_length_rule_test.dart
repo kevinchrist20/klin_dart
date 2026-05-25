@@ -6,8 +6,7 @@ import 'test_utils.dart';
 void main() {
   group('ClassLengthRule', () {
     test('reports a class that exceeds maxLines', () async {
-      final rule = ClassLengthRule(maxLines: 5);
-      // Class body spans 9 lines → 9 > 5 → should report
+      final rule = ClassLengthRule(config: {'max_lines': 5});
       final file = writeToTempFile('''
 class Foo {
   int a = 1;
@@ -27,7 +26,7 @@ class Foo {
     });
 
     test('does not report a class within maxLines', () async {
-      final rule = ClassLengthRule(maxLines: 10);
+      final rule = ClassLengthRule(config: {'max_lines': 10});
       final file = writeToTempFile('''
 class Foo {
   int a = 1;
@@ -44,8 +43,7 @@ class Foo {
         () async {
       // maxLines is small but statefulWidgetMaxLines is large — the State class
       // should only be checked against statefulWidgetMaxLines.
-      final rule = ClassLengthRule(maxLines: 5, statefulWidgetMaxLines: 50);
-      // MyScreenState extends State → isStatefulWidgetClass() = true
+      final rule = ClassLengthRule(config: {'max_lines': 5, 'stateful_widget_max_lines': 50});
       final file = writeToTempFile('''
 class State {}
 class MyScreenState extends State {
@@ -68,7 +66,7 @@ class MyScreenState extends State {
 
     test('reports a State subclass that exceeds statefulWidgetMaxLines',
         () async {
-      final rule = ClassLengthRule(maxLines: 50, statefulWidgetMaxLines: 5);
+      final rule = ClassLengthRule(config: {'max_lines': 50, 'stateful_widget_max_lines': 5});
       final file = writeToTempFile('''
 class State {}
 class MyScreenState extends State {
@@ -90,7 +88,7 @@ class MyScreenState extends State {
 
     test('does not report a State subclass within statefulWidgetMaxLines',
         () async {
-      final rule = ClassLengthRule(maxLines: 5, statefulWidgetMaxLines: 50);
+      final rule = ClassLengthRule(config: {'max_lines': 5, 'stateful_widget_max_lines': 50});
       final file = writeToTempFile('''
 class State {}
 class MyScreenState extends State {
