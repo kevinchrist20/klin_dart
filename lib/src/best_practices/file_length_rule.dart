@@ -5,7 +5,7 @@ import 'package:analyzer/error/error.dart' as error;
 
 class FileLengthRule extends DartLintRule {
   /// The default maximum number of lines allowed in a file.
-  static const _defaultMaxLines = 500;
+  static const _defaultMaxLines = 700;
 
   /// The configurable maximum number of lines allowed.
   final int maxLines;

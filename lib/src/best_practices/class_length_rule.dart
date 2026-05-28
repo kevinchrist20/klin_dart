@@ -5,7 +5,7 @@ import 'package:klin_dart/src/utils/ast_node_extensions.dart';
 
 class ClassLengthRule extends DartLintRule {
   /// The default maximum number of lines allowed in a class.
-  static const _defaultMaxLines = 300;
+  static const _defaultMaxLines = 500;
 
   static const _defaultStatefulWidgetMaxLines = 500;
 

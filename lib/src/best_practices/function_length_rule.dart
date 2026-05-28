@@ -7,8 +7,8 @@ import 'package:klin_dart/src/utils/ast_node_extensions.dart';
 
 class FunctionLengthRule extends DartLintRule {
   /// The default maximum number of lines allowed in a function.
-  static const _defaultMaxLines = 50;
-  static const _defaultBuildMethodMaxLines = 100;
+  static const _defaultMaxLines = 75;
+  static const _defaultBuildMethodMaxLines = 150;
 
   /// The configurable maximum number of lines allowed.
   final int maxLines;
