@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.1
+
+- **Default limits updated**:
+  - `class_length.max_lines`: 300 -> 500
+  - `file_length.max_lines`: 500 -> 700
+  - `function_length.max_lines`: 50 -> 75
+  - `function_length.build_method_max_lines`: 100 -> 150
+
 ## 1.3.0
 
 - **Cognitive complexity fix**: Nesting penalty now correctly accumulates `1 + currentNestingLevel` per nested construct (previously only added a flat `+1` bonus regardless of depth). Deeply nested code will now score higher and trigger warnings/errors more accurately.

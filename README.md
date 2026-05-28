@@ -52,13 +52,13 @@ analyzer:
 custom_lint:
   rules:
     - class_length:
-        max_lines: 300                    # default: 300
+        max_lines: 500                    # default: 500
         stateful_widget_max_lines: 500    # default: 500
     - file_length:
-        max_lines: 500                    # default: 500
+        max_lines: 700                    # default: 700
     - function_length:
-        max_lines: 50                     # default: 50
-        build_method_max_lines: 100       # default: 100
+        max_lines: 75                     # default: 75
+        build_method_max_lines: 150       # default: 150
     - cognitive_complexity:
         medium_threshold: 10              # default: 10  (warning)
         high_threshold: 15               # default: 15  (error)
